@@ -14,7 +14,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (CarRentalContext context = new CarRentalContext())
             {
-                return context.Set<Rental>().Where(r => r.CarId == carId).OrderByDescending(r => r.Id).SingleOrDefault();
+                return context.Set<Rental>().Where(r => r.CarId == carId).OrderByDescending(r => r.Id).FirstOrDefault();
             }
         }
     }

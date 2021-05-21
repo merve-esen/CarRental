@@ -26,14 +26,14 @@ namespace Business.Concrete
                 _rentalDal.Add(rental);
                 return new SuccessResult(Messages.CarRented);
             }
-            else if (lastRental.ReturnDate == null)
+            else if (lastRental.ReturnDate != DateTime.Parse("1.1.0001 00:00:00"))
             {
                 _rentalDal.Add(rental);
                 return new SuccessResult(Messages.CarRented);
             }
             else
             {
-                return new ErrorResult(Messages.ReturnDateIsNotNull);
+                return new ErrorResult(Messages.ReturnDateIsNull);
             }
         }
 
