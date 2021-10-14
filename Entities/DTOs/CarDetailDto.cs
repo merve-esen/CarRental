@@ -1,11 +1,11 @@
-﻿using Core.Entities;
+﻿using Core.Entities.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Entities.DTOs
 {
-    public class CarDetailDto: IDto
+    public class CarDetailDto : IDto
     {
         public int CarId { get; set; }
         public string CarName { get; set; }
