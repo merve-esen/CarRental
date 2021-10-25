@@ -75,34 +75,46 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("getbybrand")]
-        public IActionResult GetByBrand(int brandId)
-        {
-            var result = _carService.GetCarsByBrandId(brandId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
-        [HttpGet("getbycolor")]
-        public IActionResult GetByColor(int colorId)
-        {
-            var result = _carService.GetCarsByColorId(colorId);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-
-            return BadRequest(result);
-        }
-
         [HttpGet("getcardetails")]
         public IActionResult GetCarDetails()
         {
             var result = _carService.GetCarDetails();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getcarsbybrand")]
+        public IActionResult GetCarsByBrand(string brandName)
+        {
+            var result = _carService.GetCarsByBrandName(brandName);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getcarsbycolor")]
+        public IActionResult GetCarsByColor(string colorName)
+        {
+            var result = _carService.GetCarsByColorName(colorName);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("getcarsbybrandandcolor")]
+        public IActionResult GetCarsByBrandAndColor(string brandName, string colorName)
+        {
+            var result = _carService.GetCarsByBrandNameAndColorName(brandName, colorName);
             if (result.Success)
             {
                 return Ok(result);
