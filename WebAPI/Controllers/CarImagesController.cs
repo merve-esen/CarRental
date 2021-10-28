@@ -53,6 +53,27 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getfilebyid")]
+        public IActionResult GetFileById(int id)
+        {
+            if(id > 0)
+            {
+                var result = _carImageService.GetById(id);
+                if (result.Success)
+                {
+                    var b = System.IO.File.ReadAllBytes(Environment.CurrentDirectory + "\\wwwroot\\"+result.Data.ImagePath);
+                    return File(b, "image/jpeg");
+                }
+                return BadRequest(result);
+            }
+            else
+            {
+                var path = Environment.CurrentDirectory + "\\wwwroot\\images\\logo.png";
+                var b = System.IO.File.ReadAllBytes(path);
+                return File(b, "image/jpeg");
+            }
+        }
+
         [HttpPost("add")]
         public IActionResult Add([FromForm(Name = ("Image"))] IFormFile file, [FromForm] CarImage carImage)
         {

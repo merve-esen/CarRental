@@ -13,7 +13,9 @@ namespace Business.Constants
         public static string ReturnDateIsNull = "Araba teslim edilmediği için kiralanamaz.";
 
         // Rental
-        public static string CarRented = "Araba kiralandı.";
+        public static string CarRented = "Araba kiralandı";
+        public static string RentalUndeliveredCar = "Araba teslim edilmedi";
+        public static string RentalNotAvailable = "Araba seçilen tarihler arasında kiralanabilir değil";
 
         // CarImage
         public static string CarImageAdded = "Araba resmi eklendi";
