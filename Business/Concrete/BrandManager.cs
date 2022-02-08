@@ -26,6 +26,13 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [ValidationAspect(typeof(BrandValidator))]
+        public IResult Update(Brand brand)
+        {
+            _brandDal.Update(brand);
+            return new SuccessResult();
+        }
+
         public IResult Delete(Brand brand)
         {
             _brandDal.Delete(brand);
@@ -40,13 +47,6 @@ namespace Business.Concrete
         public IDataResult<Brand> GetById(int id)
         {
             return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == id));
-        }
-
-        [ValidationAspect(typeof(BrandValidator))]
-        public IResult Update(Brand brand)
-        {
-            _brandDal.Update(brand);
-            return new SuccessResult();
         }
     }
 }

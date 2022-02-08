@@ -22,6 +22,39 @@ namespace Business.Concrete
             _rentalDal = rentalDal;
         }
 
+        [ValidationAspect(typeof(RentalValidator))]
+        public IResult Add(Rental rental)
+        {
+            Rental lastRental = _rentalDal.GetLastRentalByCarId(rental.CarId);
+            if (lastRental == null)
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.CarRented);
+            }
+            else if (lastRental.ReturnDate != DateTime.Parse("1.1.0001 00:00:00"))
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.CarRented);
+            }
+            else
+            {
+                return new ErrorResult(Messages.ReturnDateIsNull);
+            }
+        }
+
+        [ValidationAspect(typeof(RentalValidator))]
+        public IResult Update(Rental rental)
+        {
+            _rentalDal.Update(rental);
+            return new SuccessResult();
+        }
+
+        public IResult Delete(Rental rental)
+        {
+            _rentalDal.Delete(rental);
+            return new SuccessResult();
+        }
+
         public IDataResult<List<Rental>> GetAll()
         {
             return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
@@ -59,39 +92,6 @@ namespace Business.Concrete
                 r.RentDate <= rental.ReturnDate
             )) return new ErrorResult(Messages.RentalNotAvailable);
 
-            return new SuccessResult();
-        }
-
-        [ValidationAspect(typeof(RentalValidator))]
-        public IResult Add(Rental rental)
-        {
-            Rental lastRental = _rentalDal.GetLastRentalByCarId(rental.CarId);
-            if (lastRental == null)
-            {
-                _rentalDal.Add(rental);
-                return new SuccessResult(Messages.CarRented);
-            }
-            else if (lastRental.ReturnDate != DateTime.Parse("1.1.0001 00:00:00"))
-            {
-                _rentalDal.Add(rental);
-                return new SuccessResult(Messages.CarRented);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ReturnDateIsNull);
-            }
-        }
-
-        public IResult Delete(Rental rental)
-        {
-            _rentalDal.Delete(rental);
-            return new SuccessResult();
-        }
-
-        [ValidationAspect(typeof(RentalValidator))]
-        public IResult Update(Rental rental)
-        {
-            _rentalDal.Update(rental);
             return new SuccessResult();
         }
     }
