@@ -6,6 +6,7 @@ using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -13,6 +14,7 @@ using Entities.DTOs;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -39,12 +41,24 @@ namespace Business.Concrete
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
+            IResult result = BusinessRules.Run(CheckIfCarExists(car.Id));
+            if (result != null)
+            {
+                return result;
+            }
+
             _carDal.Update(car);
             return new SuccessResult();
         }
 
         public IResult Delete(Car car)
         {
+            IResult result = BusinessRules.Run(CheckIfCarExists(car.Id));
+            if (result != null)
+            {
+                return result;
+            }
+
             _carDal.Delete(car);
             return new SuccessResult();
         }
@@ -102,6 +116,21 @@ namespace Business.Concrete
             }
             Add(car);
             return null;
+        }
+
+        private IResult CheckIfCarExists(int carId)
+        {
+            if (carId == 0)
+            {
+                return new ErrorResult(Messages.CarNotFound);
+            }
+
+            var result = _carDal.GetAll(c => c.Id == carId).Any();
+            if (!result)
+            {
+                return new ErrorResult(Messages.CarNotFound);
+            }
+            return new SuccessResult();
         }
     }
 }
