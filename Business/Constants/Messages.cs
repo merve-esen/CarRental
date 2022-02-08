@@ -41,7 +41,17 @@ namespace Business.Constants
         public static string CarImageLimitAchieved = "Bir araba için en fazla 5 resim yüklenebilir";
         public static string CarImageNotFound = "Araba resmi bulunamadı";
 
+        // Customer
+        public static string CustomerAdded = "Müşteri eklendi";
+        public static string CustomerUpdated = "Müşteri güncellendi";
+        public static string CustomerDeleted = "Müşteri silindi";
+        public static string CompanyNameAlreadyExists = "Şirket adı zaten mevcut";
+        public static string CustomerNotFound = "Müşteri bulunamadı";
+
         // Authorization
+        public static string UserAdded = "Kullanıcı eklendi";
+        public static string UserUpdated = "Kullanıcı güncellendi";
+        public static string UserDeleted = "Kullanıcı silindi";
         public static string AuthorizationDenied = "Yetkiniz yok";
         public static string UserRegistered = "Kayıt oldu";
         public static string UserNotFound = "Kullanıcı bulunamadı";

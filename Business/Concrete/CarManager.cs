@@ -48,7 +48,7 @@ namespace Business.Concrete
             }
 
             _carDal.Update(car);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarUpdated);
         }
 
         public IResult Delete(Car car)
@@ -60,7 +60,7 @@ namespace Business.Concrete
             }
 
             _carDal.Delete(car);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarDeleted);
         }
 
         [CacheAspect]
