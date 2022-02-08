@@ -2,6 +2,7 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Helpers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -9,6 +10,7 @@ using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Business.Concrete
@@ -25,11 +27,10 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CarImageValidator))]
         public IResult Add(IFormFile file, CarImage carImage)
         {
-            var imageCount = _carImageDal.GetAll(c => c.CarId == carImage.CarId).Count;
-
-            if (imageCount >= 5)
+            IResult result = BusinessRules.Run(CheckIfCarImageLimitExceeded(carImage.CarId));
+            if (result != null)
             {
-                return new ErrorResult(Messages.CarImageLimitAchieved);
+                return result;
             }
 
             var imageResult = FileHelper.Upload(file);
@@ -67,8 +68,14 @@ namespace Business.Concrete
 
         public IResult Delete(CarImage carImage)
         {
+            IResult result = BusinessRules.Run(CheckIfCarImageExists(carImage.Id));
+            if (result != null)
+            {
+                return result;
+            }
+
             _carImageDal.Delete(carImage);
-            return new SuccessResult();
+            return new SuccessResult(Messages.CarImageDeleted);
         }
 
         public IDataResult<List<CarImage>> GetAll()
@@ -90,6 +97,31 @@ namespace Business.Concrete
         public IDataResult<CarImage> GetById(int id)
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(i => i.Id == id));
+        }
+
+        private IResult CheckIfCarImageLimitExceeded(int carId)
+        {
+            var imageCount = _carImageDal.GetAll(c => c.CarId == carId).Count;
+            if (imageCount >= 5)
+            {
+                return new ErrorResult(Messages.CarImageLimitAchieved);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfCarImageExists(int carImageId)
+        {
+            if (carImageId == 0)
+            {
+                return new ErrorResult(Messages.CarImageNotFound);
+            }
+
+            var result = _carImageDal.GetAll(c => c.Id == carImageId).Any();
+            if (!result)
+            {
+                return new ErrorResult(Messages.CarImageNotFound);
+            }
+            return new SuccessResult();
         }
     }
 }
