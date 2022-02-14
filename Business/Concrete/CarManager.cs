@@ -37,6 +37,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarAdded);
         }
 
+        [SecuredOperation("car.update, admin")]
         [ValidationAspect(typeof(CarValidator))]
         [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
@@ -51,6 +52,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarUpdated);
         }
 
+        [SecuredOperation("car.delete, admin")]
         public IResult Delete(Car car)
         {
             IResult result = BusinessRules.Run(CheckIfCarExists(car.Id));
