@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -42,6 +43,7 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CustomerUpdated);
         }
 
+        [SecuredOperation("admin")]
         public IResult Delete(Customer customer)
         {
             IResult result = BusinessRules.Run(CheckIfCustomerExists(customer.Id));
