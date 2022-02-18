@@ -53,6 +53,7 @@ namespace Business.Concrete
         }
 
         [SecuredOperation("car.delete, admin")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(Car car)
         {
             IResult result = BusinessRules.Run(CheckIfCarExists(car.Id));
@@ -78,31 +79,37 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == id));
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
 
+        [CacheAspect]
         public IDataResult<List<Car>> GetCarsByBrandId(int brandId)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == brandId));
         }
 
+        [CacheAspect]
         public IDataResult<List<Car>> GetCarsByColorId(int colorId)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == colorId));
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarsByBrandName(string brandName)
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.BrandName == brandName));
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarsByColorName(string colorName)
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.ColorName == colorName));
         }
 
+        [CacheAspect]
         public IDataResult<List<CarDetailDto>> GetCarsByBrandNameAndColorName(string brandName, string colorName)
         {
             return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails(c => c.BrandName == brandName && c.ColorName == colorName));
