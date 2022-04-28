@@ -28,6 +28,7 @@ namespace DataAccess.Concrete.EntityFramework
                                  CarName = c.Description,
                                  BrandName = b.Name,
                                  ColorName = cl.Name,
+                                 ModelYear = c.ModelYear,
                                  DailyPrice = c.DailyPrice
                              };
                 return filter == null ? result.ToList() : result.Where(filter).ToList();
