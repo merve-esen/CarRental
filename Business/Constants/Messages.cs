@@ -53,7 +53,8 @@ namespace Business.Constants
         public static string UserUpdated = "Kullanıcı güncellendi";
         public static string UserDeleted = "Kullanıcı silindi";
         public static string AuthorizationDenied = "Yetkiniz yok";
-        public static string UserRegistered = "Kayıt oldu";
+        public static string MissingInformation = "Eksik bilgi";
+        public static string UserRegistered = "Kullanıcı oluşturuldu";
         public static string UserNotFound = "Kullanıcı bulunamadı";
         public static string PasswordError = "Parola hatası";
         public static string SuccessfulLogin = "Başarılı giriş";
