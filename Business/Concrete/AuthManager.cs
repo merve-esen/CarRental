@@ -32,8 +32,16 @@ namespace Business.Concrete
                 PasswordSalt = passwordSalt,
                 Status = true
             };
-            _userService.Add(user);
-            return new SuccessDataResult<User>(user, Messages.UserRegistered);
+            var result = _userService.Add(user);
+            if (result.Success)
+            {
+                return new SuccessDataResult<User>(user, Messages.UserRegistered);
+            }
+            else
+            {
+                return new ErrorDataResult<User>(user, result.Message);
+            }
+            
         }
 
         public IDataResult<User> Login(UserForLoginDto userForLoginDto)
