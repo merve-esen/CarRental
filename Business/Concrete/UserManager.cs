@@ -26,14 +26,23 @@ namespace Business.Concrete
         [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User user)
         {
-            IResult result = BusinessRules.Run(CheckIfUserExists(user.Id));
-            if (result != null)
+            if (!String.IsNullOrEmpty(user.Email))
             {
-                return result;
+                IResult result = BusinessRules.Run(CheckIfEmailExists(user.Email));
+                if (!result.Success)
+                {
+                    _userDal.Add(user);
+                    return new SuccessResult();
+                }
+                else
+                {
+                    return result;
+                }
             }
-
-            _userDal.Add(user);
-            return new SuccessResult();
+            else
+            {
+                return new ErrorResult(Messages.MissingInformation);
+            }
         }
 
         [ValidationAspect(typeof(UserValidator))]
@@ -67,6 +76,16 @@ namespace Business.Concrete
             }
 
             var result = _userDal.GetAll(u => u.Id == userId).Any();
+            if (!result)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfEmailExists(string email)
+        {
+            var result = _userDal.GetAll(u => u.Email == email).Any();
             if (!result)
             {
                 return new ErrorResult(Messages.UserNotFound);
