@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Helpers;
@@ -24,7 +26,10 @@ namespace Business.Concrete
             _carImageDal = carImageDal;
         }
 
+        [SecuredOperation("admin, carimage.add")]
         [ValidationAspect(typeof(CarImageValidator))]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckIfCarImageLimitExceeded(carImage.CarId));
@@ -46,7 +51,10 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageAdded);
         }
 
+        [SecuredOperation("admin, carimage.update")]
         [ValidationAspect(typeof(CarImageValidator))]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(IFormFile file, CarImage carImage)
         {
             var image = _carImageDal.Get(c => c.Id == carImage.Id);
@@ -66,6 +74,9 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageUpdated);
         }
 
+        [SecuredOperation("admin, carimage.delete")]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Delete(CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckIfCarImageExists(carImage.Id));
@@ -78,11 +89,30 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageDeleted);
         }
 
+        [SecuredOperation("admin, carimage.delete")]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [CacheRemoveAspect("ICarService.Get")]
+        public IResult DeleteAllByCarId(int carId)
+        {
+            var imagesToDelete = _carImageDal.GetAll(i => i.CarId == carId);
+            if (imagesToDelete.Count != 0)
+            {
+                foreach (var imageToDelete in imagesToDelete)
+                {
+                    _carImageDal.Delete(imageToDelete);
+                    FileHelper.Delete(imageToDelete.ImagePath);
+                }
+            }
+            return new SuccessResult(Messages.CarImageDeleted);
+        }
+
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
 
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetByCarId(int carId)
         {
             var result = _carImageDal.GetAll(i => i.CarId == carId);
@@ -94,6 +124,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarImage>>(result);
         }
 
+        [CacheAspect]
         public IDataResult<CarImage> GetById(int id)
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(i => i.Id == id));

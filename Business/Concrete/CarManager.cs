@@ -22,10 +22,12 @@ namespace Business.Concrete
     public class CarManager : ICarService
     {
         ICarDal _carDal;
+        ICarImageService _carImageService;
 
-        public CarManager(ICarDal carDal)
+        public CarManager(ICarDal carDal, ICarImageService carImageService)
         {
             _carDal = carDal;
+            _carImageService = carImageService;
         }
 
         [SecuredOperation("car.add, admin")]
@@ -62,6 +64,7 @@ namespace Business.Concrete
                 return result;
             }
 
+            _carImageService.DeleteAllByCarId(car.Id);
             _carDal.Delete(car);
             return new SuccessResult(Messages.CarDeleted);
         }
