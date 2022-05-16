@@ -29,7 +29,8 @@ namespace DataAccess.Concrete.EntityFramework
                                  BrandName = b.Name,
                                  ColorName = cl.Name,
                                  ModelYear = c.ModelYear,
-                                 DailyPrice = c.DailyPrice
+                                 DailyPrice = c.DailyPrice,
+                                 MinFindexScore = c.MinFindexScore
                              };
                 return filter == null ? result.ToList() : result.Where(filter).ToList();
             }
