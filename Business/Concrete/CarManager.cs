@@ -89,6 +89,21 @@ namespace Business.Concrete
         }
 
         [CacheAspect]
+        [PerformanceAspect(5)] //metodun calismasi 5 saniyeyi gecerse beni uyar
+        public IDataResult<CarDetailDto> GetCarDetailByCarId(int carId)
+        {
+            var result = _carDal.GetCarDetails(c => c.CarId == carId);
+            if(result.Count > 0)
+            {
+                return new SuccessDataResult<CarDetailDto>(result[0]);
+            }
+            else
+            {
+                return new ErrorDataResult<CarDetailDto>(Messages.CarNotFound);
+            }
+        }
+
+        [CacheAspect]
         public IDataResult<List<Car>> GetCarsByBrandId(int brandId)
         {
             return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.BrandId == brandId));
