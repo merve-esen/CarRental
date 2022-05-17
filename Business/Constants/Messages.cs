@@ -61,5 +61,8 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Kullanıcı mevcut";
         public static string AccessTokenCreated = "Token oluşturuldu";
         public static string AccessTokenNotCreated = "Token oluşturulamadı";
+        internal static string CreditCardNotValid;
+        internal static string CreditCardListed;
+        internal static string CreditCardNotFound;
     }
 }
