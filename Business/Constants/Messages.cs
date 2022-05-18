@@ -61,8 +61,18 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Kullanıcı mevcut";
         public static string AccessTokenCreated = "Token oluşturuldu";
         public static string AccessTokenNotCreated = "Token oluşturulamadı";
-        internal static string CreditCardNotValid;
-        internal static string CreditCardListed;
-        internal static string CreditCardNotFound;
+
+        // Credit Card
+        public static string CreditCardNotValid = "Kredi kartı bilgileri doğrulanamadı";
+        public static string CreditCardListed = "Kredi kartı listelendi";
+        public static string CreditCardNotFound = "Kredi kartı bulunamadı";
+        public static string StringMustConsistOfNumbersOnly = "Bu veri sadece sayılardan oluşmalıdır";
+        public static string CustomerCreditCardNotFound = "Müşteri kredi kartı bulunamadı";
+        public static string CustomerCreditCardNotDeleted = "Musteri kredi karti silinemedi";
+        public static string CustomerCreditCardDeleted = "Müşteri kredi kartı başarıyla silindi";
+        public static string CustomerCreditCardAlreadySaved = "Kredi kartı zaten kaydedilmiş";
+        public static string CustomerCreditCardFailedToSave = "Müşteri kredi kartı kaydedilemedi";
+        public static string CustomerCreditCardSaved = "Müşteri kredi kartı başarıyla kaydedildi";
+        public static string CustomersCreditCardsListed = "Müşterinin kredi kartları listelendi";
     }
 }

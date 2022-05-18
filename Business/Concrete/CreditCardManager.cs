@@ -1,12 +1,11 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Concrete
 {
@@ -19,7 +18,7 @@ namespace Business.Concrete
             _creditCardDal = creditCardDal;
         }
 
-        //[SecuredOperation("admin,creditCard.all,creditCard.get,customer")]
+        [SecuredOperation("admin,creditCard.all,creditCard.get,customer")]
         public IDataResult<CreditCard> Get(string cardNumber, string expireYear, string expireMonth, string cvc, string cardHolderFullName)
         {
             var creditCard = GetCreditCardByCardInfo(cardNumber, expireYear, expireMonth, cvc, cardHolderFullName);
@@ -41,8 +40,8 @@ namespace Business.Concrete
             return new ErrorDataResult<CreditCard>(null, Messages.CreditCardNotFound);
         }
 
-        //[SecuredOperation("admin,creditCard.all,creditCard.validate,customer")]
-        //[ValidationAspect(typeof(CreditCardValidator))]
+        [SecuredOperation("admin,creditCard.all,creditCard.validate,customer")]
+        [ValidationAspect(typeof(CreditCardValidator))]
         public IResult Validate(CreditCard creditCard)
         {
             var validateResult = GetCreditCardByCardInfo(creditCard.CardNumber, creditCard.ExpireYear, creditCard.ExpireMonth, creditCard.Cvc, creditCard.CardHolderFullName);
