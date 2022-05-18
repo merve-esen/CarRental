@@ -1,10 +1,8 @@
-﻿using Core.Utilities.Results;
+﻿using Core.Constants;
+using Core.Utilities.Results;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using Core.Constants;
 
 namespace Core.Utilities.Helpers
 {
