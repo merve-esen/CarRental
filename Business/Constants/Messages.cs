@@ -59,6 +59,7 @@
         public static string AccessTokenNotCreated = "Token oluşturulamadı";
 
         // Credit Card
+        public static string CreditCardSaved = "Kredi kartı kaydedildi";
         public static string CreditCardNotValid = "Kredi kartı bilgileri doğrulanamadı";
         public static string CreditCardListed = "Kredi kartı listelendi";
         public static string CreditCardNotFound = "Kredi kartı bulunamadı";

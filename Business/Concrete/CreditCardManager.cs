@@ -60,6 +60,12 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        public IResult Add(CreditCard creditCard)
+        {
+            _creditCardDal.Add(creditCard);
+            return new SuccessResult(Messages.CreditCardSaved);
+        }
+
         private CreditCard GetCreditCardByCardInfo(string cardNumber, string expireYear, string expireMonth, string cvc, string cardHolderFullName)
         {
             return _creditCardDal.Get(c => c.CardNumber == cardNumber &&
