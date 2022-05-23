@@ -43,11 +43,27 @@ namespace Business.Concrete
         [TransactionScopeAspect]
         public IResult SaveCustomerCreditCard(CustomerCreditCardModel customerCreditCardModel)
         {
+            var creditCard = new CreditCard()
+            {
+                CardHolderFullName = customerCreditCardModel.CreditCard.CardHolderFullName.ToUpperInvariant(),
+                CardNumber = customerCreditCardModel.CreditCard.CardNumber,
+                ExpireMonth = customerCreditCardModel.CreditCard.ExpireMonth,
+                ExpireYear = customerCreditCardModel.CreditCard.ExpireYear,
+                Cvc = customerCreditCardModel.CreditCard.Cvc
+            };
+            var creditCardAddResult = _creditCardService.Add(creditCard);
+
+            if (!creditCardAddResult.Success)
+            {
+                return new ErrorResult(creditCardAddResult.Message);
+            }
+
             var creditCardResult = _creditCardService.Get(customerCreditCardModel.CreditCard.CardNumber,
-                                                    customerCreditCardModel.CreditCard.ExpireYear,
-                                                    customerCreditCardModel.CreditCard.ExpireMonth,
-                                                    customerCreditCardModel.CreditCard.Cvc,
-                                                    customerCreditCardModel.CreditCard.CardHolderFullName.ToUpperInvariant());
+                customerCreditCardModel.CreditCard.ExpireYear,
+                customerCreditCardModel.CreditCard.ExpireMonth,
+                customerCreditCardModel.CreditCard.Cvc,
+                customerCreditCardModel.CreditCard.CardHolderFullName.ToUpperInvariant());
+
             if (!creditCardResult.Success)
             {
                 return new ErrorResult(creditCardResult.Message);
