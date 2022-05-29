@@ -27,8 +27,10 @@
 
         // Rental
         public static string CarRented = "Araba kiralandı";
+        public static string RentalSuccessful = "Kiralama işlemi başarıyla tamamlandı";
         public static string RentalUndeliveredCar = "Araba teslim edilmedi";
         public static string RentalNotAvailable = "Araba seçilen tarihler arasında kiralanabilir değil";
+        public static string InsufficientFindexScore = "Findex puanınız, bu aracı kiralamak için yeterli değil";
 
         // CarImage
         public static string CarImageAdded = "Araba resmi eklendi";
@@ -58,7 +60,7 @@
         public static string AccessTokenCreated = "Token oluşturuldu";
         public static string AccessTokenNotCreated = "Token oluşturulamadı";
 
-        // Credit Card
+        // Credit Card - Payment
         public static string CreditCardSaved = "Kredi kartı kaydedildi";
         public static string CreditCardNotValid = "Kredi kartı bilgileri doğrulanamadı";
         public static string CreditCardListed = "Kredi kartı listelendi";
@@ -71,5 +73,7 @@
         public static string CustomerCreditCardFailedToSave = "Müşteri kredi kartı kaydedilemedi";
         public static string CustomerCreditCardSaved = "Müşteri kredi kartı başarıyla kaydedildi";
         public static string CustomersCreditCardsListed = "Müşterinin kredi kartları listelendi";
+        public static string InsufficientCardBalance = "Kart bakiyesi yetersiz";
+        public static string PaymentSuccessful = "Ödeme başarıyla tamamlandı";
     }
 }

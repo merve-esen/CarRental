@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.Concrete;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -84,6 +85,17 @@ namespace WebAPI.Controllers
         public IActionResult Delete(Rental rental)
         {
             var result = _rentalService.Delete(rental);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("rent")]
+        public IActionResult Rent(RentPaymentRequestModel rentPaymentRequest)
+        {
+            var result = _rentalService.Rent(rentPaymentRequest);
             if (result.Success)
             {
                 return Ok(result);
