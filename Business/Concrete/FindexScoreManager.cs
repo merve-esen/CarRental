@@ -15,16 +15,16 @@ namespace Business.Concrete
 
         public IDataResult<int> GetCustomerFindexScore(int customerId)
         {
-            var customerResult = IsCustomerIdExist(customerId);
-            if (customerResult.Success)
-            {
+            //var customerResult = IsCustomerIdExist(customerId);
+            //if (customerResult.Success)
+            //{
                 //Simulated
                 Random random = new Random();
                 int randomFindexScore = Convert.ToInt16(random.Next(0, 1900));
                 return new SuccessDataResult<int>(randomFindexScore);
-            }
+            //}
 
-            return new ErrorDataResult<int>(-1, customerResult.Message);
+            //return new ErrorDataResult<int>(-1, customerResult.Message);
         }
 
         private IResult IsCustomerIdExist(int customerId)
