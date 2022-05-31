@@ -59,6 +59,7 @@
         public static string UserAlreadyExists = "Kullanıcı mevcut";
         public static string AccessTokenCreated = "Token oluşturuldu";
         public static string AccessTokenNotCreated = "Token oluşturulamadı";
+        public static string PasswordChanged = "Şifre başarıyla değiştirildi";
 
         // Credit Card - Payment
         public static string CreditCardSaved = "Kredi kartı kaydedildi";

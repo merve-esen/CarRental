@@ -1,10 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.JWT;
 using Entities.DTOs;
+using Entities.Models;
 
 namespace Business.Concrete
 {
@@ -78,6 +81,29 @@ namespace Business.Concrete
                 return new ErrorDataResult<AccessToken>(accessToken, Messages.AccessTokenNotCreated);
             }
             return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreated);
+        }
+
+        [ValidationAspect(typeof(ChangePasswordValidator))]
+        public IResult ChangePassword(ChangePasswordModel updatedUser)
+        {
+            UserForLoginDto checkedUser = new UserForLoginDto
+            {
+                Email = updatedUser.Email,
+                Password = updatedUser.OldPassword
+            };
+            var loginResult = Login(checkedUser);
+            if (loginResult.Success)
+            {
+                var user = loginResult.Data;
+                byte[] passwordHash, passwordSalt;
+                HashingHelper.CreatePasswordHash(updatedUser.NewPassword, out passwordHash, out passwordSalt);
+                user.PasswordHash = passwordHash;
+                user.PasswordSalt = passwordSalt;
+                _userService.Update(user);
+                return new SuccessResult(Messages.PasswordChanged);
+            }
+
+            return new ErrorResult(loginResult.Message);
         }
     }
 }

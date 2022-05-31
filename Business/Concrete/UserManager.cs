@@ -56,6 +56,27 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        [ValidationAspect(typeof(UserValidator))]
+        public IResult UpdateProfile(User user)
+        {
+            IResult result = BusinessRules.Run(CheckIfUserExists(user.Id));
+            if (result != null)
+            {
+                return result;
+            }
+
+            var updatedUser = _userDal.Get(u => u.Id == user.Id && u.Email == user.Email);
+            if (updatedUser == null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+
+            updatedUser.FirstName = user.FirstName;
+            updatedUser.LastName = user.LastName;
+            _userDal.Update(updatedUser);
+            return new SuccessResult();
+        }
+
         public IDataResult<List<OperationClaim>> GetClaims(User user)
         {
             return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));

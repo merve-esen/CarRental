@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Entities.DTOs;
+using Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers
 {
@@ -43,6 +44,18 @@ namespace WebAPI.Controllers
 
             var registerResult = _authService.Register(userForRegisterDto);
             var result = _authService.CreateAccessToken(registerResult.Data);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPost("changepassword")]
+        public ActionResult ChangePassword(ChangePasswordModel updatedUser)
+        {
+            var result = _authService.ChangePassword(updatedUser);
             if (result.Success)
             {
                 return Ok(result);
