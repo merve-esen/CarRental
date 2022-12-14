@@ -21,6 +21,16 @@ namespace Business.Concrete
             _userDal = userDal;
         }
 
+        public IDataResult<User> GetByMail(string email)
+        {
+            return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email));
+        }
+
+        public IDataResult<List<OperationClaim>> GetClaims(User user)
+        {
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
+        }
+
         [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User user)
         {
@@ -75,16 +85,6 @@ namespace Business.Concrete
             updatedUser.LastName = user.LastName;
             _userDal.Update(updatedUser);
             return new SuccessResult();
-        }
-
-        public IDataResult<List<OperationClaim>> GetClaims(User user)
-        {
-            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
-        }
-
-        public IDataResult<User> GetByMail(string email)
-        {
-            return new SuccessDataResult<User>(_userDal.Get(u => u.Email == email));
         }
 
         private IResult CheckIfUserExists(int userId)

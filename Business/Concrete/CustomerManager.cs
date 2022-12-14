@@ -21,6 +21,16 @@ namespace Business.Concrete
             _customerDal = customerDal;
         }
 
+        public IDataResult<List<Customer>> GetAll()
+        {
+            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll());
+        }
+
+        public IDataResult<Customer> GetById(int id)
+        {
+            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.UserId == id));
+        }
+
         [ValidationAspect(typeof(CustomerValidator))]
         public IResult Add(Customer customer)
         {
@@ -52,16 +62,6 @@ namespace Business.Concrete
 
             _customerDal.Delete(customer);
             return new SuccessResult(Messages.CustomerDeleted);
-        }
-
-        public IDataResult<List<Customer>> GetAll()
-        {
-            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll());
-        }
-
-        public IDataResult<Customer> GetById(int id)
-        {
-            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.UserId == id));
         }
 
         private IResult CheckIfCustomerExists(int customerId)

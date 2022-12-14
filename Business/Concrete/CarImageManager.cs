@@ -25,6 +25,30 @@ namespace Business.Concrete
             _carImageDal = carImageDal;
         }
 
+        [CacheAspect]
+        public IDataResult<List<CarImage>> GetAll()
+        {
+            return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
+        }
+
+        [CacheAspect]
+        public IDataResult<CarImage> GetById(int id)
+        {
+            return new SuccessDataResult<CarImage>(_carImageDal.Get(i => i.Id == id));
+        }
+
+        [CacheAspect]
+        public IDataResult<List<CarImage>> GetByCarId(int carId)
+        {
+            var result = _carImageDal.GetAll(i => i.CarId == carId);
+            if (result.Count == 0)
+            {
+                string path = "/images/logo.jpg";
+                result.Add(new CarImage { Id = 0, CarId = carId, ImagePath = path, Date = DateTime.Now });
+            }
+            return new SuccessDataResult<List<CarImage>>(result);
+        }
+
         [SecuredOperation("admin, carimage.add")]
         [ValidationAspect(typeof(CarImageValidator))]
         [CacheRemoveAspect("ICarImageService.Get")]
@@ -38,7 +62,6 @@ namespace Business.Concrete
             }
 
             var imageResult = FileHelper.Upload(file);
-
             if (!imageResult.Success)
             {
                 return new ErrorResult(imageResult.Message);
@@ -103,30 +126,6 @@ namespace Business.Concrete
                 }
             }
             return new SuccessResult(Messages.CarImageDeleted);
-        }
-
-        [CacheAspect]
-        public IDataResult<List<CarImage>> GetAll()
-        {
-            return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
-        }
-
-        [CacheAspect]
-        public IDataResult<List<CarImage>> GetByCarId(int carId)
-        {
-            var result = _carImageDal.GetAll(i => i.CarId == carId);
-            if(result.Count == 0)
-            {
-                string path = "/images/logo.jpg";
-                result.Add(new CarImage { Id = 0, CarId = carId, ImagePath = path, Date = DateTime.Now });
-            }
-            return new SuccessDataResult<List<CarImage>>(result);
-        }
-
-        [CacheAspect]
-        public IDataResult<CarImage> GetById(int id)
-        {
-            return new SuccessDataResult<CarImage>(_carImageDal.Get(i => i.Id == id));
         }
 
         private IResult CheckIfCarImageLimitExceeded(int carId)

@@ -22,6 +22,18 @@ namespace Business.Concrete
             _colorDal = colorDal;
         }
 
+        [CacheAspect]
+        public IDataResult<List<Color>> GetAll()
+        {
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
+        }
+
+        [CacheAspect]
+        public IDataResult<Color> GetById(int id)
+        {
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id));
+        }
+
         [SecuredOperation("color.add, admin")]
         [ValidationAspect(typeof(ColorValidator))]
         [CacheRemoveAspect("IColorService.Get")]
@@ -64,18 +76,6 @@ namespace Business.Concrete
 
             _colorDal.Delete(color);
             return new SuccessResult(Messages.ColorDeleted);
-        }
-
-        [CacheAspect]
-        public IDataResult<List<Color>> GetAll()
-        {
-            return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
-        }
-
-        [CacheAspect]
-        public IDataResult<Color> GetById(int id)
-        {
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id));
         }
 
         private IResult CheckIfColorNameExists(string colorName)

@@ -22,6 +22,18 @@ namespace Business.Concrete
             _brandDal = brandDal;
         }
 
+        [CacheAspect]
+        public IDataResult<List<Brand>> GetAll()
+        {
+            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
+        }
+
+        [CacheAspect]
+        public IDataResult<Brand> GetById(int id)
+        {
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == id));
+        }
+
         [SecuredOperation("brand.add, admin")]
         [ValidationAspect(typeof(BrandValidator))]
         [CacheRemoveAspect("IBrandService.Get")]
@@ -64,18 +76,6 @@ namespace Business.Concrete
 
             _brandDal.Delete(brand);
             return new SuccessResult(Messages.BrandDeleted);
-        }
-
-        [CacheAspect]
-        public IDataResult<List<Brand>> GetAll()
-        {
-            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
-        }
-
-        [CacheAspect]
-        public IDataResult<Brand> GetById(int id)
-        {
-            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == id));
         }
 
         private IResult CheckIfBrandNameExists(string brandName)

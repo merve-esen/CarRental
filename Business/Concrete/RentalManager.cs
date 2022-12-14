@@ -33,41 +33,28 @@ namespace Business.Concrete
             _findexScoreService = findexScoreService;
         }
 
-        [ValidationAspect(typeof(RentalValidator))]
-        [CacheRemoveAspect("IRentalService.Get")]
-        public IResult Add(Rental rental)
+        [CacheAspect]
+        public IDataResult<List<Rental>> GetAll()
         {
-            Rental lastRental = _rentalDal.GetLastRentalByCarId(rental.CarId);
-            if (lastRental == null)
-            {
-                _rentalDal.Add(rental);
-                return new SuccessResult(Messages.CarRented);
-            }
-            else if (lastRental.ReturnDate != DateTime.Parse("1.1.0001 00:00:00"))
-            {
-                _rentalDal.Add(rental);
-                return new SuccessResult(Messages.CarRented);
-            }
-            else
-            {
-                return new ErrorResult(Messages.ReturnDateIsNull);
-            }
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
         }
 
-        [ValidationAspect(typeof(RentalValidator))]
-        [CacheRemoveAspect("IRentalService.Get")]
-        public IResult Update(Rental rental)
+        [CacheAspect]
+        public IDataResult<Rental> GetById(int id)
         {
-            _rentalDal.Update(rental);
-            return new SuccessResult();
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
         }
 
-        [SecuredOperation("admin")]
-        [CacheRemoveAspect("IRentalService.Get")]
-        public IResult Delete(Rental rental)
+        [CacheAspect]
+        public IDataResult<List<Rental>> GetAllByCarId(int carId)
         {
-            _rentalDal.Delete(rental);
-            return new SuccessResult();
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.CarId == carId));
+        }
+
+        [CacheAspect]
+        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
         }
 
         [SecuredOperation("admin,rental.all,rental.rent,customer")]
@@ -139,35 +126,40 @@ namespace Business.Concrete
             return new ErrorDataResult<int>(-1, creditCardResult.Message);
         }
 
-        [CacheAspect]
-        public IDataResult<List<Rental>> GetAll()
+        [ValidationAspect(typeof(RentalValidator))]
+        [CacheRemoveAspect("IRentalService.Get")]
+        public IResult Add(Rental rental)
         {
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
+            Rental lastRental = _rentalDal.GetLastRentalByCarId(rental.CarId);
+            if (lastRental == null)
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.CarRented);
+            }
+            else if (lastRental.ReturnDate != DateTime.Parse("1.1.0001 00:00:00"))
+            {
+                _rentalDal.Add(rental);
+                return new SuccessResult(Messages.CarRented);
+            }
+            else
+            {
+                return new ErrorResult(Messages.ReturnDateIsNull);
+            }
         }
 
-        [CacheAspect]
-        public IDataResult<Rental> GetById(int id)
+        [ValidationAspect(typeof(RentalValidator))]
+        [CacheRemoveAspect("IRentalService.Get")]
+        public IResult Update(Rental rental)
         {
-            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
+            _rentalDal.Update(rental);
+            return new SuccessResult();
         }
 
-        [CacheAspect]
-        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("IRentalService.Get")]
+        public IResult Delete(Rental rental)
         {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails());
-        }
-
-        [CacheAspect]
-        public IDataResult<List<Rental>> GetAllByCarId(int carId)
-        {
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.CarId == carId));
-        }
-
-        public IResult CheckReturnDateByCarId(int carId)
-        {
-            var result = _rentalDal.GetAll(x => x.CarId == carId && x.ReturnDate == null);
-            if (result.Count > 0) return new ErrorResult(Messages.RentalUndeliveredCar);
-
+            _rentalDal.Delete(rental);
             return new SuccessResult();
         }
 
@@ -179,6 +171,14 @@ namespace Business.Concrete
                 r.ReturnDate >= rental.RentDate &&
                 r.RentDate <= rental.ReturnDate
             )) return new ErrorResult(Messages.RentalNotAvailable);
+
+            return new SuccessResult();
+        }
+
+        public IResult CheckReturnDateByCarId(int carId)
+        {
+            var result = _rentalDal.GetAll(x => x.CarId == carId && x.ReturnDate == null);
+            if (result.Count > 0) return new ErrorResult(Messages.RentalUndeliveredCar);
 
             return new SuccessResult();
         }
